@@ -1,35 +1,37 @@
 import { useForm } from "react-hook-form";
+import { Paper, Stack, TextField, Container } from "@mui/material";
+import type { Schema } from "../types/schema";
+import { schema } from "../types/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function Users() {
   const {
     register,
     formState: { errors },
-    handleSubmit
-  } = useForm<{ email: string }>({mode:"all"});
-
-  const formSubmit = () =>{
-    console.log("submit");
-  }
+  } = useForm<Schema>({
+    mode: "all",
+    resolver: zodResolver(schema),
+  });
 
   return (
-    <form onSubmit={handleSubmit(formSubmit)}>
-      {/* Instead of making it all controlled, the hook form manages this for us 
-      and has access to all the props of this input field below */}
-      <input
-        {...register("email", {
-          required: {
-            value: true,
-            message: "The email is required",
-          },
-          maxLength: {
-            value: 10,
-            message: "max length can only be 10",
-          },
-        })}
-        placeholder="email"
-      />
-      <p>{errors.email?.message}</p>
-    </form>
+    <>
+      <Container maxWidth={"md"} style={{ padding: "1em" }}>
+        <Stack sx={{ gap: 2 }}>
+          <TextField
+            {...register("name")}
+            label="Name"
+            error={!!errors.name}
+            helperText={errors.name?.message}
+          />
+          <TextField
+            {...register("email")}
+            label="Email"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+        </Stack>
+      </Container>
+    </>
   );
 }
 

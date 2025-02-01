@@ -57,6 +57,6 @@ tooks used
 4. react-hook-form
 5. zod schemas and validation
 6. hokkform/resolvers used to create a connection between react-hook-form and zod (use as dev dependency)
-   7.tanstack query (manage queries and api data )
-7. axios (to make api calls )
-8. lodash
+8.tanstack query (manage queries and api data )
+9. axios (to make api calls )
+10. lodash

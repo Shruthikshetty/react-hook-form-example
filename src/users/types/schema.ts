@@ -1,9 +1,9 @@
 // schema for form using zod
-import { custom, z } from "zod";
+import { z } from "zod";
 import { patters } from "../../constants";
 
 // refine is used to give custom validations
-export const schems = z.object({
+export const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   email: z
     .string()
@@ -16,3 +16,6 @@ export const schems = z.object({
       { message: "Email not valied" }
     ),
 });
+
+// get the type of our schema :) so now we have type safty for our form
+export type Schema = z.infer<typeof schema>;
