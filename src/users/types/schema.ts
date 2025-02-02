@@ -7,7 +7,7 @@ export const schema = z.object({
   name: z.string().min(1, { message: "Required" }),
   email: z
     .string()
-    .min(1, { message: "email is required" })
+    .min(1, { message: "Email is required" })
     .refine(
       (text) => {
         // validate the user entered text to be a valied email
@@ -15,7 +15,14 @@ export const schema = z.object({
       },
       { message: "Email not valied" }
     ),
+  states: z.array(z.string().min(1).max(2)),
 });
 
 // get the type of our schema :) so now we have type safty for our form
 export type Schema = z.infer<typeof schema>;
+
+export const defaultValues: Schema = {
+  name: "",
+  email: "",
+  states: [],
+};
