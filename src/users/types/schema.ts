@@ -15,7 +15,10 @@ export const schema = z.object({
       },
       { message: "Email not valied" }
     ),
-  states: z.array(z.string().min(1).max(2)),
+  states: z
+    .array(z.string())
+    .min(1)
+    .max(2, { message: "can only select 2 states" }),
 });
 
 // get the type of our schema :) so now we have type safty for our form

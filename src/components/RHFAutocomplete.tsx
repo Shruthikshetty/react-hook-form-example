@@ -6,7 +6,7 @@ import CheckedIcon from "@mui/icons-material/CheckBox";
 
 type RHFAutocompleteProps<T extends FieldValues> = {
   name: Path<T>;
-  options: Options[];
+  options?: Options[];
   label: string;
 };
 
@@ -22,12 +22,12 @@ export default function RHFAutocomplete<T extends FieldValues>({
       name={name}
       render={({ field: { value, onChange, ref }, fieldState: { error } }) => (
         <Autocomplete
-          options={options}
+          options={options ?? []}
           value={value.map((id: string) =>
-            options.find((item) => item.id === id)
+            options?.find((item) => item.id === id)
           )}
           getOptionLabel={(option) =>
-            options.find((item) => item.id === option.id)?.label ?? ""
+            options?.find((item) => item.id === option.id)?.label ?? ""
           }
           onChange={(_, newValue) => {
             onChange(newValue.map((item) => item.id));
