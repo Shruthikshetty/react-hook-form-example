@@ -19,7 +19,8 @@ export const schema = z.object({
     .array(z.string())
     .min(1)
     .max(2, { message: "can only select 2 states" }),
-  languageSpoken: z.array(z.string())
+  languageSpoken: z.array(z.string()),
+  gender: z.string().min(1), // is required
 });
 
 // get the type of our schema :) so now we have type safty for our form
@@ -29,5 +30,6 @@ export const defaultValues: Schema = {
   name: "",
   email: "",
   states: [],
-  languageSpoken:[]
+  languageSpoken:[],
+  gender: ''
 };
