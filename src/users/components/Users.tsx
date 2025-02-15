@@ -14,6 +14,7 @@ import RHFCheckbox from "../../components/RHFCheckbox";
 import RHFDateTimePicker from "../../components/RHFDateTimePicker";
 import RHFSlider from "../../components/RHFSlider";
 import RHFSWitch from "../../components/RHFSwitch";
+import RHFTextField from "../../components/RHFTextField";
 
 export function Users() {
   // get states data
@@ -21,27 +22,12 @@ export function Users() {
   const languages = useLanguages();
   const gendersQuery = useGenders();
   const skillsQuery = useSkills();
-
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<Schema>();
   return (
     <>
       <Container maxWidth={"md"} style={{ padding: "1em" }}>
         <Stack sx={{ gap: 2 }}>
-          <TextField
-            {...register("name")}
-            label="Name"
-            error={!!errors.name}
-            helperText={errors.name?.message}
-          />
-          <TextField
-            {...register("email")}
-            label="Email"
-            error={!!errors.email}
-            helperText={errors.email?.message}
-          />
+          <RHFTextField<Schema> name={"name"} label={"Name"} />
+          <RHFTextField<Schema> name={"email"} label={"Email"} />
           <RHFAutocompleteProps<Schema>
             name={"states"}
             label="States"
