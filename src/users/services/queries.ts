@@ -74,7 +74,7 @@ export function useUser(id: number) {
               languageSpoken: data.languageSpoken,
               gender: data.gender,
               skills: data.skills,
-              registartionDateAndTime: new Date(data.registrationDateAndTime),
+              registrationDateAndTime: new Date(data.registrationDateAndTime),
               salary: data.salary,
               isTeacher: data.isTeacher,
               students: data.students,
