@@ -2,18 +2,24 @@ import { useFormContext } from "react-hook-form";
 import { Stack, TextField, Container } from "@mui/material";
 import type { Schema } from "../types/schema";
 import RHFAutocompleteProps from "../../components/RHFAutocomplete";
-import { useGenders, useLanguages, useSkills, useStates } from "../services/queries";
+import {
+  useGenders,
+  useLanguages,
+  useSkills,
+  useStates,
+} from "../services/queries";
 import { RHFToggleButtonGroup } from "../../components/RHFToggleButtonGroup";
 import { RHFRadioGroup } from "../../components/RHFRadioGroup";
 import RHFCheckbox from "../../components/RHFCheckbox";
 import RHFDateTimePicker from "../../components/RHFDateTimePicker";
+import RHFSlider from "../../components/RHFSlider";
 
 export function Users() {
   // get states data
   const statesQuery = useStates();
   const languages = useLanguages();
   const gendersQuery = useGenders();
-  const skillsQuery = useSkills()
+  const skillsQuery = useSkills();
 
   const {
     register,
@@ -49,8 +55,16 @@ export function Users() {
             label="Gender"
             options={gendersQuery.data}
           />
-          <RHFCheckbox<Schema> name={"skills"} label={"Skills"} options={skillsQuery.data ?? []} />
-            <RHFDateTimePicker<Schema>  name="registartionDateAndTime" label="Date"/>
+          <RHFCheckbox<Schema>
+            name={"skills"}
+            label={"Skills"}
+            options={skillsQuery.data ?? []}
+          />
+          <RHFDateTimePicker<Schema>
+            name="registartionDateAndTime"
+            label="Registration date"
+          />
+          <RHFSlider<Schema> name="salary" label={"Salary range"} />
         </Stack>
       </Container>
     </>
