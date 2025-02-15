@@ -1,12 +1,24 @@
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
-import { Stack, TextField, Container, Button } from "@mui/material";
-import type { Schema } from "../types/schema";
+import {
+  Stack,
+  Container,
+  Button,
+  List,
+  ListSubheader,
+  ListItem,
+  ListItemButton,
+  Typography,
+  ListItemText,
+} from "@mui/material";
+import { defaultValues, type Schema } from "../types/schema";
 import RHFAutocompleteProps from "../../components/RHFAutocomplete";
 import {
   useGenders,
   useLanguages,
   useSkills,
   useStates,
+  useUser,
+  useUsers,
 } from "../services/queries";
 import { RHFToggleButtonGroup } from "../../components/RHFToggleButtonGroup";
 import { RHFRadioGroup } from "../../components/RHFRadioGroup";
@@ -16,7 +28,7 @@ import RHFSlider from "../../components/RHFSlider";
 import RHFSWitch from "../../components/RHFSwitch";
 import RHFTextField from "../../components/RHFTextField";
 import React, { useEffect } from "react";
-import { replace } from "lodash";
+import styles from "./User.module.css";
 
 export function Users() {
   // get states data
@@ -24,13 +36,19 @@ export function Users() {
   const languages = useLanguages();
   const gendersQuery = useGenders();
   const skillsQuery = useSkills();
+  const usersQuery = useUsers();
 
-  const { control, unregister } = useFormContext<Schema>();
+  const { control, unregister, reset, setValue } = useFormContext<Schema>();
 
   const { append, fields, remove, replace } = useFieldArray({
     control,
     name: "students",
   });
+
+  // seleted suer id
+  const id = useWatch({ control, name: "id" });
+  // get the user details
+  const userQuery = useUser(id);
 
   const isTeacher = useWatch({ control, name: "isTeacher" });
   // if isTacher is false empty the array of students
@@ -40,53 +58,109 @@ export function Users() {
       // unregister the students else we will have it as undefined not good!!
       unregister("students");
     }
-  }, [isTeacher, replace , unregister]);
+  }, [isTeacher, replace, unregister]);
+
+  // reset the data if user is seleted
+  useEffect(() => {
+    if (userQuery.data) {
+      reset(userQuery.data);
+    }
+  }, [reset, userQuery.data]);
+
+  // reset form to default values
+  function handlereset() {
+    reset(defaultValues);
+  }
+
+  function handleUserclick(id: number) {
+    setValue("id", id); // set value of your id in form state
+  }
 
   return (
     <>
-      <Container maxWidth={"md"} style={{ padding: "1em" }}>
-        <Stack sx={{ gap: 2 }}>
-          <RHFTextField<Schema> name={"name"} label={"Name"} />
-          <RHFTextField<Schema> name={"email"} label={"Email"} />
-          <RHFAutocompleteProps<Schema>
-            name={"states"}
-            label="States"
-            options={statesQuery.data}
-          />
-          <RHFToggleButtonGroup<Schema>
-            name={"languageSpoken"}
-            options={languages.data}
-          />
-          <RHFRadioGroup<Schema>
-            name={"gender"}
-            label="Gender"
-            options={gendersQuery.data}
-          />
-          <RHFCheckbox<Schema>
-            name={"skills"}
-            label={"Skills"}
-            options={skillsQuery.data ?? []}
-          />
-          <RHFDateTimePicker<Schema>
-            name="registartionDateAndTime"
-            label="Registration date"
-          />
-          <RHFSlider<Schema> name="salary" label={"Salary range"} />
-          <RHFSWitch<Schema> name={"isTeacher"} label={"Are you a teacher"} />
+      <Container maxWidth={"md"} component={"form"} style={{ padding: "1em" }}>
+        <Stack sx={{ flexDirection: "row", gap: 2 }}>
+          <List subheader={<ListSubheader>Users</ListSubheader>}>
+            {usersQuery?.data?.map((user) => (
+              <ListItem key={user.id}>
+                <ListItemButton
+                  onClick={() => handleUserclick(user.id)}
+                  selected={user.id === id}
+                >
+                  <ListItemText primary={user.label}></ListItemText>
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Stack sx={{ gap: 2, flex: 1 }}>
+            <RHFTextField<Schema> name={"name"} label={"Name"} />
+            <RHFTextField<Schema> name={"email"} label={"Email"} />
+            <RHFAutocompleteProps<Schema>
+              name={"states"}
+              label="States"
+              options={statesQuery.data}
+            />
+            <RHFToggleButtonGroup<Schema>
+              name={"languageSpoken"}
+              options={languages.data}
+            />
+            <RHFRadioGroup<Schema>
+              name={"gender"}
+              label="Gender"
+              options={gendersQuery.data}
+            />
+            <RHFCheckbox<Schema>
+              name={"skills"}
+              label={"Skills"}
+              options={skillsQuery.data ?? []}
+            />
+            <RHFDateTimePicker<Schema>
+              name="registartionDateAndTime"
+              label="Registration date"
+            />
+            <RHFSlider<Schema> name="salary" label={"Salary range"} />
+            <RHFSWitch<Schema> name={"isTeacher"} label={"Are you a teacher"} />
 
-          {isTeacher && (
-            <Button onClick={() => append({ name: "" })} type="button">
-              Add new student
-            </Button>
-          )}
-          {fields.map((fields, index) => (
-            <React.Fragment key={fields.id}>
-              <RHFTextField name={`students.${index}.name`} label="Name" />
-              <Button color="error" onClick={() => remove(index)} type="button">
-                Remove
+            {isTeacher && (
+              <Button
+                variant="contained"
+                className={styles.centered}
+                onClick={() => append({ name: "" })}
+                type="button"
+              >
+                Add new student
               </Button>
-            </React.Fragment>
-          ))}
+            )}
+            {fields.map((fields, index) => (
+              <React.Fragment key={fields.id}>
+                <RHFTextField name={`students.${index}.name`} label="Name" />
+                <Button
+                  color="error"
+                  variant="contained"
+                  onClick={() => remove(index)}
+                  type="button"
+                  className={styles.centered}
+                >
+                  Remove
+                </Button>
+              </React.Fragment>
+            ))}
+            <Stack
+              sx={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Button type="submit" variant="contained">
+                New User
+              </Button>
+              <Button
+                type="button"
+                variant="contained"
+                color="error"
+                onClick={handlereset}
+              >
+                Reset
+              </Button>
+            </Stack>
+          </Stack>
         </Stack>
       </Container>
     </>
