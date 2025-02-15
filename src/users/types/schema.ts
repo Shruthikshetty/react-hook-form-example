@@ -25,7 +25,8 @@ export const schema = z.object({
     .array(z.string())
     .max(2, { message: "only 2 skills can be selected" }),
   registartionDateAndTime: z.date(),
-  salary: z.array(z.number()).min(2).max(2)
+  salary: z.array(z.number()).min(2).max(2),
+  isTeacher: z.boolean(),
 });
 
 // get the type of our schema :) so now we have type safty for our form
@@ -39,5 +40,6 @@ export const defaultValues: Schema = {
   gender: "",
   skills: [],
   registartionDateAndTime: new Date(),
-  salary: [0, 2000]
+  salary: [0, 2000],
+  isTeacher: false
 };

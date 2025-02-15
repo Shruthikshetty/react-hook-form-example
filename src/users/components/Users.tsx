@@ -13,6 +13,7 @@ import { RHFRadioGroup } from "../../components/RHFRadioGroup";
 import RHFCheckbox from "../../components/RHFCheckbox";
 import RHFDateTimePicker from "../../components/RHFDateTimePicker";
 import RHFSlider from "../../components/RHFSlider";
+import RHFSWitch from "../../components/RHFSwitch";
 
 export function Users() {
   // get states data
@@ -65,6 +66,7 @@ export function Users() {
             label="Registration date"
           />
           <RHFSlider<Schema> name="salary" label={"Salary range"} />
+          <RHFSWitch<Schema> name={"isTeacher"} label={"Are you a teacher"} />
         </Stack>
       </Container>
     </>
