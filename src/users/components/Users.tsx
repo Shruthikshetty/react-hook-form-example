@@ -6,6 +6,7 @@ import { useGenders, useLanguages, useSkills, useStates } from "../services/quer
 import { RHFToggleButtonGroup } from "../../components/RHFToggleButtonGroup";
 import { RHFRadioGroup } from "../../components/RHFRadioGroup";
 import RHFCheckbox from "../../components/RHFCheckbox";
+import RHFDateTimePicker from "../../components/RHFDateTimePicker";
 
 export function Users() {
   // get states data
@@ -49,6 +50,7 @@ export function Users() {
             options={gendersQuery.data}
           />
           <RHFCheckbox<Schema> name={"skills"} label={"Skills"} options={skillsQuery.data ?? []} />
+            <RHFDateTimePicker<Schema>  name="registartionDateAndTime" label="Date"/>
         </Stack>
       </Container>
     </>
