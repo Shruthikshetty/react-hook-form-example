@@ -60,3 +60,8 @@ tooks used
 8.tanstack query (manage queries and api data )
 9. axios (to make api calls )
 10. lodash
+
+
+## concepts to know
+
+1. unions in typescript ,  Discriminated Unions

@@ -1,5 +1,5 @@
-import { useFormContext } from "react-hook-form";
-import { Stack, TextField, Container } from "@mui/material";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { Stack, TextField, Container, Button } from "@mui/material";
 import type { Schema } from "../types/schema";
 import RHFAutocompleteProps from "../../components/RHFAutocomplete";
 import {
@@ -15,6 +15,8 @@ import RHFDateTimePicker from "../../components/RHFDateTimePicker";
 import RHFSlider from "../../components/RHFSlider";
 import RHFSWitch from "../../components/RHFSwitch";
 import RHFTextField from "../../components/RHFTextField";
+import React, { useEffect } from "react";
+import { replace } from "lodash";
 
 export function Users() {
   // get states data
@@ -22,6 +24,24 @@ export function Users() {
   const languages = useLanguages();
   const gendersQuery = useGenders();
   const skillsQuery = useSkills();
+
+  const { control, unregister } = useFormContext<Schema>();
+
+  const { append, fields, remove, replace } = useFieldArray({
+    control,
+    name: "students",
+  });
+
+  const isTeacher = useWatch({ control, name: "isTeacher" });
+  // if isTacher is false empty the array of students
+  useEffect(() => {
+    if (!isTeacher) {
+      replace([]);
+      // unregister the students else we will have it as undefined not good!!
+      unregister("students");
+    }
+  }, [isTeacher, replace , unregister]);
+
   return (
     <>
       <Container maxWidth={"md"} style={{ padding: "1em" }}>
@@ -53,6 +73,20 @@ export function Users() {
           />
           <RHFSlider<Schema> name="salary" label={"Salary range"} />
           <RHFSWitch<Schema> name={"isTeacher"} label={"Are you a teacher"} />
+
+          {isTeacher && (
+            <Button onClick={() => append({ name: "" })} type="button">
+              Add new student
+            </Button>
+          )}
+          {fields.map((fields, index) => (
+            <React.Fragment key={fields.id}>
+              <RHFTextField name={`students.${index}.name`} label="Name" />
+              <Button color="error" onClick={() => remove(index)} type="button">
+                Remove
+              </Button>
+            </React.Fragment>
+          ))}
         </Stack>
       </Container>
     </>
