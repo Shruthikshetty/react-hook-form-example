@@ -26,7 +26,7 @@ export const schema = z
       skills: z
         .array(z.string())
         .max(2, { message: "only 2 skills can be selected" }),
-      registartionDateAndTime: z.date(),
+      registrationDateAndTime: z.date(),
       salary: z.array(z.number()).min(2).max(2),
     }),
     z.discriminatedUnion("varient", [
@@ -46,20 +46,20 @@ export const schema = z
         ),
       }),
     ])
-  )
+  );
 
 // get the type of our schema :) so now we have type safty for our form
 export type Schema = z.infer<typeof schema>;
 
 export const defaultValues: Schema = {
-  varient:"create",
+  varient: "create",
   name: "",
   email: "",
   states: [],
   languageSpoken: [],
   gender: "",
   skills: [],
-  registartionDateAndTime: new Date(),
+  registrationDateAndTime: new Date(),
   salary: [0, 2000],
   isTeacher: false,
 };

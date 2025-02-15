@@ -1,4 +1,9 @@
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import {
+  SubmitHandler,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
 import {
   Stack,
   Container,
@@ -7,7 +12,6 @@ import {
   ListSubheader,
   ListItem,
   ListItemButton,
-  Typography,
   ListItemText,
 } from "@mui/material";
 import { defaultValues, type Schema } from "../types/schema";
@@ -29,6 +33,7 @@ import RHFSWitch from "../../components/RHFSwitch";
 import RHFTextField from "../../components/RHFTextField";
 import React, { useEffect } from "react";
 import styles from "./User.module.css";
+import { useCreateUser } from "../services/mutations";
 
 export function Users() {
   // get states data
@@ -37,8 +42,10 @@ export function Users() {
   const gendersQuery = useGenders();
   const skillsQuery = useSkills();
   const usersQuery = useUsers();
+  const createUserMutation = useCreateUser();
 
-  const { control, unregister, reset, setValue } = useFormContext<Schema>();
+  const { control, unregister, reset, setValue, handleSubmit } =
+    useFormContext<Schema>();
 
   const { append, fields, remove, replace } = useFieldArray({
     control,
@@ -47,6 +54,7 @@ export function Users() {
 
   // seleted suer id
   const id = useWatch({ control, name: "id" });
+  const varient = useWatch({ control, name: "varient" });
   // get the user details
   const userQuery = useUser(id);
 
@@ -76,9 +84,22 @@ export function Users() {
     setValue("id", id); // set value of your id in form state
   }
 
+  const onSubmit: SubmitHandler<Schema> = (data) => {
+    if (varient === "create") {
+      createUserMutation.mutate(data);
+    } else {
+      // edit the selected user
+    }
+  };
+
   return (
     <>
-      <Container maxWidth={"md"} component={"form"} style={{ padding: "1em" }}>
+      <Container
+        maxWidth={"md"}
+        component={"form"}
+        style={{ padding: "1em" }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Stack sx={{ flexDirection: "row", gap: 2 }}>
           <List subheader={<ListSubheader>Users</ListSubheader>}>
             {usersQuery?.data?.map((user) => (
@@ -115,7 +136,7 @@ export function Users() {
               options={skillsQuery.data ?? []}
             />
             <RHFDateTimePicker<Schema>
-              name="registartionDateAndTime"
+              name="registrationDateAndTime"
               label="Registration date"
             />
             <RHFSlider<Schema> name="salary" label={"Salary range"} />

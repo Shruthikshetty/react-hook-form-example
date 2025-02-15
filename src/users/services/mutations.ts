@@ -10,7 +10,8 @@ export function useCreateUser() {
       await axios.post("http://localhost:3000/api/user", data);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: "" });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      alert("user created")
     },
   });
 }
