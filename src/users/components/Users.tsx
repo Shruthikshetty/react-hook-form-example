@@ -13,6 +13,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { defaultValues, type Schema } from "../types/schema";
 import RHFAutocompleteProps from "../../components/RHFAutocomplete";
@@ -33,7 +34,7 @@ import RHFSWitch from "../../components/RHFSwitch";
 import RHFTextField from "../../components/RHFTextField";
 import React, { useEffect } from "react";
 import styles from "./User.module.css";
-import { useCreateUser } from "../services/mutations";
+import { useCreateUser, useEditUser } from "../services/mutations";
 
 export function Users() {
   // get states data
@@ -43,6 +44,7 @@ export function Users() {
   const skillsQuery = useSkills();
   const usersQuery = useUsers();
   const createUserMutation = useCreateUser();
+  const editUserMuation = useEditUser();
 
   const { control, unregister, reset, setValue, handleSubmit } =
     useFormContext<Schema>();
@@ -88,8 +90,11 @@ export function Users() {
     if (varient === "create") {
       createUserMutation.mutate(data);
     } else {
-      // edit the selected user
+      // edit the selected
+      editUserMuation.mutate(data);
     }
+    // reset form
+    reset(defaultValues);
   };
 
   return (
@@ -170,7 +175,7 @@ export function Users() {
               sx={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Button type="submit" variant="contained">
-                New User
+                {varient === "create" ? "New User" : "Edit User"}
               </Button>
               <Button
                 type="button"

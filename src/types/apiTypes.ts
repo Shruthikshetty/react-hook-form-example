@@ -3,7 +3,7 @@ type Create = {
 };
 
 type Edit = {
-  varient: "Edit";
+  varient: "edit";
   id: number;
 };
 
@@ -14,7 +14,6 @@ type Student = {
 // common users feilds
 export type Common = {
   email: string;
-  formerEmploymentPeriod: string[];
   name: string;
   gender: string;
   languageSpoken: string[];
